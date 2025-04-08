@@ -8,7 +8,8 @@ import {useUser} from "../hooks";
 export const Betslip = () => {
     const {updateBalance} = useUser();
     const dispatch = useDispatch();
-    const {selections} = useSelector((state) => state.user);
+    const { selections } = useSelector((state) => state.user);
+    const allSelections = useSelector((state) => state.selection.selections)
     const [totalStake, setTotalStake] = useState(0);
     const [isPlaced, setIsPlaced] = useState(false);
 
@@ -56,26 +57,30 @@ export const Betslip = () => {
             <h3>Betslip</h3>
             {isPlaced ? <Alert variant="success">Bet has been placed.</Alert> : (selections.length === 0 &&
                 <div>Betslip is empty.</div>)}
-            {selections.map(({eventDate, eventName, marketName, selection: {id: selectionId, odds, description}, stake}) => (
-                <Container key={selectionId} className="mt-2 p-2 bg-light rounded">
-                    <div className="fs-6 fw-bold">{description}</div>
-                    <div><small><strong>{marketName}</strong></small></div>
-                    <div><small>Odds: <strong>{odds}</strong></small></div>
-                    <div><small className="text-muted">{eventName}</small></div>
-                    <div><small className="text-muted">{formatDate(eventDate)}</small></div>
-                    <Row>
-                        <Col sm="3" className="d-flex align-items-center">
-                            <small>Stake:</small>
-                        </Col>
-                        <Col sm="7">
-                            <Form.Control type="number" onChange={(event) => handleChange(event, selectionId)}
-                                          value={stake} placeholder="Enter a stake"/>
-                        </Col>
-                    </Row>
-                    {stake > 0 && <div className="mt-3 border-top pt-2"><small>Potential
-                        Return: <strong>${parseFloat(stake * odds).toFixed(2)}</strong></small></div>}
-                </Container>
-            ))}
+            {selections.map(({ eventDate, eventName, marketName, selection, stake }) => {
+                const liveSelection = allSelections[selection.id] || selection;
+
+                return (
+                    <Container key={selection.id} className="mt-2 p-2 bg-light rounded">
+                        <div className="fs-6 fw-bold">{liveSelection.description}</div>
+                        <div><small><strong>{marketName}</strong></small></div>
+                        <div><small>Odds: <strong>{liveSelection.odds}</strong></small></div>
+                        <div><small className="text-muted">{eventName}</small></div>
+                        <div><small className="text-muted">{formatDate(eventDate)}</small></div>
+                        <Row>
+                            <Col sm="3" className="d-flex align-items-center">
+                                <small>Stake:</small>
+                            </Col>
+                            <Col sm="7">
+                                <Form.Control type="number" onChange={(event) => handleChange(event, selection.id)}
+                                            value={stake} placeholder="Enter a stake"/>
+                            </Col>
+                        </Row>
+                        {stake > 0 && <div className="mt-3 border-top pt-2"><small>Potential
+                            Return: <strong>${parseFloat(stake * liveSelection.odds).toFixed(2)}</strong></small></div>}
+                    </Container>
+                )
+            })}
             <div className="d-flex mt-2">
                 <Button className="flex-grow-1 m-1" variant="primary" type="submit" onClick={submitBetslip}
                         disabled={isPlaced || totalStake === 0}>Place a bet</Button>
