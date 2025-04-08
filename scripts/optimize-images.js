@@ -13,52 +13,45 @@ const sizes = [
 
 const deletableExtensions = [".jpg", ".jpeg", ".png", ".webp"];
 
-const processImages = async () => {
-    const files = fs.readdirSync(imagesDir);
-    const tasks = [];
+const isResponsiveVariant = (baseName) => baseName.match(/-(small|medium|large)$/);
 
-    for (const file of files) {
-        const extension = path.extname(file).toLowerCase();
-        const inputPath = path.join(imagesDir, file);
-        const baseName = path.basename(file, extension);
 
-        const isDeletable = deletableExtensions.includes(extension);
-        const isResponsiveVariant = baseName.match(/-(small|medium|large)$/);
+const optimizeImages = async (file) => {
+    const extension = path.extname(file).toLowerCase();
+    const inputPath = path.join(imagesDir, file);
+    const baseName = path.basename(file, extension);
+    const isDeletable = deletableExtensions.includes(extension);
 
-        // Skip non-target files or already optimized ones
-        if (!isDeletable || isResponsiveVariant) continue;
+    // Skip non-target files or already optimized ones
+    if (!isDeletable || isResponsiveVariant(baseName)) return;
 
-        const variantTasks = sizes.map(({ width, suffix }) => {
-            const outputPath = path.join(imagesDir, `${baseName}-${suffix}.webp`);
-            return sharp(inputPath)
-                .resize(width)
-                .webp({ quality: 75 })
-                .toFile(outputPath)
-                .then(() => {
-                    console.log(`Images converted to webp: ${outputPath}`);
-                });
-        });
+    try {
+        // Ensure all processes are done before continue generating manifest optimized.json
+        await Promise.all(
+            sizes.map(({ width, suffix }) => {
+                const outputPath = path.join(imagesDir, `${baseName}-${suffix}.webp`);
 
-        // Wait for all variants to finish, then delete original
-        const fullTask = Promise.all(variantTasks)
-            .then(() => {
-                if (fs.existsSync(inputPath)) {
-                    fs.unlinkSync(inputPath);
-                    console.log(`Deleted original image: ${file}`);
-                }
+                return sharp(inputPath)
+                    .resize(width)
+                    .webp({ quality: 75 })
+                    .toFile(outputPath)
+                    .then(() => console.log(`Images converted to webp: ${outputPath}`));
             })
-            .catch((err) => {
-                console.error(`Error processing ${file}:`, err.message);
-            });
+        );
 
-        tasks.push(fullTask);
+        if (fs.existsSync(inputPath)) {
+            fs.unlinkSync(inputPath);
+            console.log(`Deleted original image: ${file}`);
+        }
+    } catch (error) {
+        console.error(`Error processing ${file}:`, error.message);
     }
+}
 
-    // Ensure all processes are done before continue generating manifest optimized.json
-    await Promise.all(tasks);
-
-    // Generate a manifest public/img/optimized.json file with an array of optimized filenames
-    const optimizedImages = fs.readdirSync(imagesDir)
+// Generate a manifest public/img/optimized.json file with an array of optimized filenames
+const generateManifest = () => {
+    const optimizedImages = fs
+        .readdirSync(imagesDir)
         .filter(file => file.match(/-(small|medium|large)\.webp$/))
         .sort();
 
@@ -68,6 +61,12 @@ const processImages = async () => {
     );
 
     console.log('Created manifest: optimized.json');
+}
+
+const processImages = async () => {
+    const files = fs.readdirSync(imagesDir);
+    await Promise.all(files.map(optimizeImages))
+    generateManifest();
     console.log('All images processed.');
 }
 
