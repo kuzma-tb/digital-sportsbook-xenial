@@ -1,0 +1,24 @@
+{
+  "id": 10005,
+  "name": "Liverpool v Southampton",
+  "date": "2025-03-14T21:00:00Z",
+  "category": "soccer",
+  "markets": [
+    {
+      "id": 1003,
+      "name": "Win From Behind",
+      "selections": [
+        100017,
+        100018
+      ]
+    },
+    {
+      "id": 1004,
+      "name": "Draw No Bet",
+      "selections": [
+        100019,
+        100020
+      ]
+    }
+  ]
+}

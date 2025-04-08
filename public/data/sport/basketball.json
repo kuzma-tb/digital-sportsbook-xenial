@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "NBA",
+    "eventsCount": 2
+  },
+  {
+    "id": 2,
+    "name": "Adriatic League",
+    "eventsCount": 1
+  },
+  {
+    "id": 3,
+    "name": "B.League",
+    "eventsCount": 1
+  }
+]

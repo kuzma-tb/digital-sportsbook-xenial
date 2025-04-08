@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "eventDate": "2025-01-15T12:30:00Z",
+    "eventName": "Oklahoma City Thunder @ New Orleans Pelicans",
+    "marketName": "1st Half Money Line",
+    "description": "New Orleans Pelicans",
+    "odds": 2.40,
+    "stake": 20,
+    "potentialReturns": 48.00,
+    "status": "won"
+  }
+]
