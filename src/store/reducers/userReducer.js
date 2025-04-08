@@ -1,4 +1,10 @@
-import {ADD_SELECTION, CLEAR_SELECTIONS, UPDATE_SELECTION, LOAD_HISTORY} from '../actions/userActions';
+import {
+    ADD_SELECTION,
+    CLEAR_SELECTIONS,
+    UPDATE_SELECTION,
+    REMOVE_SELECTION,
+    LOAD_HISTORY
+} from '../actions/userActions';
 
 const initialState = {
     selections: [],
@@ -13,7 +19,10 @@ export const userReducer = (state = initialState, action) => {
                 selections: [
                     ...state.selections,
                     {
-                        ...action.payload,
+                        selection: action.payload.selection,
+                        eventDate: action.payload.eventDate,
+                        eventName: action.payload.eventName,
+                        marketName: action.payload.marketName,
                         stake: 0,
                     },
                 ],
@@ -27,6 +36,13 @@ export const userReducer = (state = initialState, action) => {
                     }
                     return selection;
                 }),
+            };
+        case REMOVE_SELECTION:
+            return {
+                ...state,
+                selections: state.selections.filter(
+                    (sel) => sel.selection.id !== action.payload.selectionId
+                ),
             };
         case CLEAR_SELECTIONS:
             return {
