@@ -6,7 +6,7 @@ import {formatDate, fetchDataFromServer} from "../utils";
 import {useUser} from "../hooks";
 
 export const Betslip = () => {
-    const {user, updateBalance} = useUser();
+    const {updateBalance} = useUser();
     const dispatch = useDispatch();
     const {selections} = useSelector((state) => state.user);
     const [totalStake, setTotalStake] = useState(0);
@@ -17,7 +17,7 @@ export const Betslip = () => {
             const response = await fetchDataFromServer('/data/place-bet.json', selections);
             if (response.status === 'OK') {
                 dispatch(clearSelections());
-                updateBalance(user.balance - totalStake);
+                updateBalance(-totalStake);
                 setIsPlaced(true);
             }
         };
