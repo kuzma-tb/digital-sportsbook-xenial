@@ -10,12 +10,14 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
     "react-scripts": "5.0.1",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "ws": "^8.18.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "optimize-images": "node scripts/optimize-images.js"
+    "optimize-images": "node scripts/optimize-images.js",
+    "wss": "node scripts/websocket-server.js"
   },
   "eslintConfig": {
     "extends": [

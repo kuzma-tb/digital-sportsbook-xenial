@@ -11,7 +11,11 @@ export const selectionReducer = (state = initialState, action) => {
                 ...state,
                 selections: {
                     ...state.selections,
-                    [action.payload.id]: action.payload,
+                    // Merge the old selection data with the new one from action.payload
+                    [action.payload.id]: {
+                        ...(action.payload.id || {}),
+                        ...action.payload
+                    },
                 }
             };
         default:
