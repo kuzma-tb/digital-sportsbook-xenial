@@ -29,19 +29,19 @@ export const HomePage = () => {
             });
     }, []);
 
-    if (canShow === null) return <Spinner animation="border" variant="primary" />
+    let content = null;
+
+    if (canShow === null) content = <Spinner animation="border" variant="primary" />;
 
     if (!canShow) {
-        return (
+        content = (
             <Alert variant="warning">
                 Responsive images not found.
                 Please run <code>npm run optimize-images</code> to generate them.
             </Alert>
         )
-    }
-
-    return (
-        <>
+    } else {
+        content = (
             <Carousel>
                 {carouselImages.map(({ name, alt }) => (
                     <Carousel.Item key={name} >
@@ -51,6 +51,12 @@ export const HomePage = () => {
                     </Carousel.Item>
                 ))}
             </Carousel>
+        )
+    }
+
+    return (
+        <>
+            {content}
             <Coupon couponId={1}/>
         </>
     );
