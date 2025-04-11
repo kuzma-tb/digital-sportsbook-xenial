@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "react-bootstrap";
 import {loadSelection} from "../store/actions/selectionActions";
-import {addSelection} from "../store/actions/userActions";
+import {addSelection, removeSelection} from "../store/actions/userActions";
 import {fetchDataFromServer} from "../utils";
 
 export const SelectionButton = ({eventDate, eventName, marketName, selectionId, showDescription = false, ...other}) => {
@@ -13,9 +13,10 @@ export const SelectionButton = ({eventDate, eventName, marketName, selectionId, 
 
     const handleClick = () => {
         if (isSelected) {
-            return;
+            dispatch(removeSelection({selectionId}));
+        } else {
+            dispatch(addSelection({eventDate, eventName, marketName, selection}));
         }
-        dispatch(addSelection({eventDate, eventName, marketName, selection}));
     }
 
     useEffect(() => {

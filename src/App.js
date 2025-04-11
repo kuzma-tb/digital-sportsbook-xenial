@@ -1,5 +1,7 @@
 import React from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import { OddsWebSocketListener } from "./websockets/OddsWebSocketListener";
 
 import {UserProvider} from "./contexts/UserContext";
 import {Menu, Header, Sidebar} from './components';
@@ -13,6 +15,8 @@ function App() {
     return (
         <Router>
             <UserProvider>
+                {/* Listen globally WS */}
+                <OddsWebSocketListener />
                 <Header/>
                 <div className="container">
                     <div className="row justify-content-center">

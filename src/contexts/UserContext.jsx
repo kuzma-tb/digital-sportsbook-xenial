@@ -10,7 +10,9 @@ export const UserProvider = ({children}) => {
     });
 
     const updateBalance = (newBalance) => {
-        setUser({...user, balance: newBalance});
+        setUser((prev) => ({
+            ...prev, balance: prev.balance + newBalance
+        }));
     };
 
     return (

@@ -1,80 +1,70 @@
-# Home task
+# Digital Sportsbook — Home Task
 
-To run the application, use:
+A simplified sports betting web app built with **React**, **Redux**, **Bootstrap**, and **WebSockets**.
+Users can place bets, manage their balance, receive real-time odds updates, and enjoy responsive optimized images.
 
+---
+
+## Getting Started
+
+### 1. Install dependencies
 ```sh
 npm install
+```
 
+---
+
+### 2. Optimize images (optional but recommended)
+
+Optimizes all images in `public/img` into responsive **.webp** versions with **small**, **medium**, and **large** breakpoints.
+
+```sh
+npm run optimize-images
+```
+
+> **Note**: If this step is skipped, the homepage will display an alert asking to run the optimizer.
+
+---
+
+### 3. Start the development server
+
+```sh
 npm run start
 ```
+App runs at: http://localhost:3000
 
-### 1. Fix a bug in the existing functionality
+---
 
-There is an issue in the application. When the user is placing bets, their balance is not updating.
+### 4. Start the WebSocket server (for real-time odds)
 
-Steps to reproduce:
-
-1) Click on any SelectionButton to add a selection to Betslip
-2) Input some value in the Stake field
-3) Click "Place a bet"
-
-Current result:
-
-The user's balance remains unchanged.
-
-Expected result:
-
-The total stake amount is deducted from the user's balance.
-
-### 2. Improve SelectionButton
-
-Currently, clicking on SelectionButton adds the corresponding selection to Betslip.
-And the button becomes active (selected).
-
-Implement the following functionality:
-
-When the user clicks on the active (selected) SelectionButton, remove the corresponding selection from Betslip,
-and restore the button's initial state.
-
-### 3. Introduce Websocket updates
-
-Setup a WebSocket server.
-
-Connect to the Websocket server from the client.
-
-Broadcast a message from the server to the client within every 10 seconds.
-
-The message to contain a set of random, each time unique values (odds).
-
-On the client, use the received values to update the corresponding selections in the store.
-
-Example:
-
-```json
-[
-  {
-    "id": 100010,
-    "odds": 1.20
-  },
-  {
-    "id": 100020,
-    "odds": 2.50
-  }
-]
+```sh
+npm run wss
 ```
 
-When the client receives the message above, it has to update the `odds` value of `100010` and `100020` selections in the store.
+WebSocket server runs on port 8080 and pushes updated odds every 10 seconds.
 
-### 4. Optimize images (optional)
+---
 
-This is an optional bonus task.
+## Implemented Tasks
 
-Create a script to optimize the existing [images](./public/img).
-You are free to choose a technology or tool for this.
+### 1. Fix: Balance not updating after placing a bet
+  - Balance is now correctly reduced by total stake when a bet is placed
+  - Selections are cleared after submission
 
-## Other notes
+### 2. Improve: SelectionButton toggling
+  - Clicking a selected button removes it from the Betslip
+  - Button state reflects active/inactive selection
+  - UX consistent and intuitive
 
-This is not required, but if you wish to publish your what you have done on GitHub, please create a new branch for your
-changes and raise a pull request for the `master` branch.
+### 3. WebSocket odds updates
+  - WebSocket server (scripts/websocket-server.js) sends random odds every 10s
+  - Client (OddsWebSocketListener.jsx) listens globally
+  - Redux store is updated in real-time
+  - Betslip reflects updated odds live
 
-In this case, it would be also nice to have the commit history.
+### 4. Responsive Image Optimization (optional)
+  - Script: scripts/optimize-images.js
+  - Uses sharp to generate .webp variants (small, medium, large)
+  - Deletes original .jpg, .png, .webp files after conversion
+  - Generates optimized.json to verify completeness
+  - Homepage displays alert if images are missing
